@@ -6,7 +6,7 @@ class Searchbar extends Component {
   };
 
   handleNameChange = (e) => {
-    this.setState({ request: e.currentTarget.value.toLowerCase() });
+    this.setState({ request: e.target.value.toLowerCase() });
   };
 
   onHandleSubmit = (e) => {
@@ -16,12 +16,9 @@ class Searchbar extends Component {
     if (requestValue.trim() === "") {
       return alert("Entre name");
     }
+
     this.props.onSubmit(requestValue);
     this.setState({ request: "" });
-
-    if (!requestValue) {
-      console.log(requestValue);
-    }
   };
 
   render() {

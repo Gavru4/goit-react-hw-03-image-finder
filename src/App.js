@@ -13,22 +13,23 @@ class App extends Component {
     isLoading: false,
     error: null,
   };
+  async componentDidMount() {
+    const apiAnswer = await FechApi(this.state);
+    this.setState({ images: apiAnswer });
+  }
 
-  async componentDidUpdate(_, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevState.request !== this.state.request) {
       const apiAnswer = await FechApi(this.state);
       this.setState({ images: apiAnswer });
     }
-    if (
-      prevState.page !== this.state.page ||
-      prevState.request !== this.state.request
-    ) {
+    if (prevState.page !== this.state.page && this.state.page !== 1) {
       const apiAnswer = await FechApi(this.state);
-      this.setState({ images: apiAnswer });
+      this.setState((prev) => ({ images: [...prev.images, ...apiAnswer] }));
     }
   }
   handleFormSubmit = (requestValue) => {
-    this.setState({ request: requestValue });
+    this.setState({ request: requestValue, page: 1 });
   };
   onLoadMore = (e) => {
     e.preventDefault();
