@@ -1,7 +1,8 @@
-const ImageGalleryItem = () => {
+const ImageGalleryItem = ({ el }) => {
+  const { webformatURL, largeImageURL, tags } = el;
   return (
     <li className="gallery-item">
-      <img src="" alt="" />
+      <img src={webformatURL} alt={tags} />
     </li>
   );
 };

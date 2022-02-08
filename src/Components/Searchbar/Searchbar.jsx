@@ -11,16 +11,17 @@ class Searchbar extends Component {
 
   onHandleSubmit = (e) => {
     const requestValue = this.state.request;
-
     e.preventDefault();
 
     if (requestValue.trim() === "") {
       return alert("Entre name");
     }
-
     this.props.onSubmit(requestValue);
-
     this.setState({ request: "" });
+
+    if (!requestValue) {
+      console.log(requestValue);
+    }
   };
 
   render() {

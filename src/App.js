@@ -1,40 +1,46 @@
-import { Component } from "react";
+import { Component, useLayoutEffect } from "react";
 import "./App.css";
+import LoadMoreBtn from "./Components/Button/Button";
 import ImageGallery from "./Components/ImageGallery/ImageGallery";
 import Searchbar from "./Components/Searchbar/Searchbar";
-// import FechApi from "./Components/Services/FechAPI.jsx";
+import FechApi from "./Components/Services/FechAPI.jsx";
 class App extends Component {
   state = {
-    status: "idle",
+    search: "",
+    page: 1,
     request: "",
-    webformatURL: "",
-    largeImageURL: "",
-    id: null,
+    images: [],
+    isLoading: false,
+    error: null,
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevValue = prevProps.request;
-    const nextValue = prevState.request;
-
-    if (prevValue !== nextValue) {
-      // this.setState({ status: "pending" });
-      fetch(
-        `https://pixabay.com/api/?q=${nextValue}&page=1&key=25285051-4b045d69a43564daa3e04547c&image_type=photo&orientation=horizontal&per_page=12`
-      )
-        .then((response) => {
-          return response.json();
-        })
-        .then(({ webformatURL, largeImageURL, id }) => {});
+  async componentDidUpdate(_, prevState) {
+    if (prevState.request !== this.state.request) {
+      const apiAnswer = await FechApi(this.state);
+      this.setState({ images: apiAnswer });
+    }
+    if (
+      prevState.page !== this.state.page ||
+      prevState.request !== this.state.request
+    ) {
+      const apiAnswer = await FechApi(this.state);
+      this.setState({ images: apiAnswer });
     }
   }
   handleFormSubmit = (requestValue) => {
     this.setState({ request: requestValue });
   };
+  onLoadMore = (e) => {
+    e.preventDefault();
+    this.setState((prev) => ({ page: prev.page + 1 }));
+  };
+
   render() {
     return (
       <>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery />
+        <ImageGallery images={this.state.images} />
+        <LoadMoreBtn onLoadMore={this.onLoadMore} />
       </>
     );
   }
