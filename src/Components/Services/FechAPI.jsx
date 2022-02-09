@@ -17,14 +17,5 @@ const FechApi = async ({ request, page }) => {
   } catch (error) {
     throw new Error(`Запрос с именем ${request} не найден`);
   }
-  // .then((response) => {
-  //   console.log(response);
-  //   if (response.ok) {
-  //     return response.json();
-  //   }
-  // })
-  // .catch((err) => {
-  //
-  // });
 };
 export default FechApi;
