@@ -1,7 +1,10 @@
-import { Audio } from "react-loader-spinner";
+import { MutatingDots } from "react-loader-spinner";
+import PropTypes from "prop-types";
 
 const Loader = () => {
-  return <Audio heigth="50" width="50" color="grey" ariaLabel="loading" />;
+  return (
+    <MutatingDots heigth="50" width="50" color="grey" ariaLabel="loading" />
+  );
 };
 
 export default Loader;

@@ -1,28 +1,33 @@
 import { Component } from "react";
+import { ToastContainer } from "react-toastify";
 import "./App.css";
 import LoadMoreBtn from "./Components/Button/Button";
 import ImageGallery from "./Components/ImageGallery/ImageGallery";
 import Loader from "./Components/Loader/Loader.jsx";
+import Modal from "./Components/Modal/Modal";
 import Searchbar from "./Components/Searchbar/Searchbar";
 import FechApi from "./Components/Services/FechAPI.jsx";
+
 class App extends Component {
   state = {
     loadMore: true,
-    search: "",
+    // search: "",
     page: 1,
     request: "",
     images: [],
     isLoading: false,
-    error: null,
+    modalOpen: false,
+    imageURL: {},
+    // error: null,
   };
   async onRequestSubmit() {
     const apiAnswer = await FechApi(this.state);
     this.setState({ images: apiAnswer });
   }
   async componentDidMount() {
+    this.onRequestSubmit();
     // const apiAnswer = await FechApi(this.state);
     // this.setState({ images: apiAnswer });
-    this.onRequestSubmit();
   }
 
   async componentDidUpdate(_, prevState) {
@@ -49,18 +54,35 @@ class App extends Component {
     this.setState({ request: requestValue, page: 1 });
   };
   onLoadMore = (e) => {
-    e.preventDefault();
-
     this.setState((prev) => ({ page: prev.page + 1, isLoading: true }));
   };
 
+  onModalOpen = (imageURL) => {
+    this.setState({ modalOpen: true, imageURL: imageURL });
+  };
+  // onKeyPress = (e) =>
+  // };
+  onModalClose = (e) => {
+    if (e === "overlay") this.setState({ modalOpen: false });
+  };
   render() {
     return (
       <>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery images={this.state.images} />
+        <ImageGallery
+          images={this.state.images}
+          onModalOpen={this.onModalOpen}
+        />
         {this.state.isLoading && <Loader />}
         {this.state.loadMore && <LoadMoreBtn onLoadMore={this.onLoadMore} />}
+        {this.state.modalOpen && (
+          <Modal
+            imageURL={this.state.imageURL}
+            onModalClose={this.onModalClose}
+            onKeyPress={this.onKeyPress}
+          />
+        )}
+        <ToastContainer autoClose={3000} />
       </>
     );
   }
