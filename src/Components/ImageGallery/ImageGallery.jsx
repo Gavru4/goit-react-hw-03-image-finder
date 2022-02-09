@@ -7,7 +7,11 @@ const ImageGallery = ({ images, onModalOpen }) => {
     <ul className={s.gallery}>
       {images.map((el) => {
         return (
-          <ImageGalleryItem el={el} key={el.id} onModalOpen={onModalOpen} />
+          <ImageGalleryItem
+            el={el}
+            key={el.webformatURL}
+            onModalOpen={onModalOpen}
+          />
         );
       })}
     </ul>

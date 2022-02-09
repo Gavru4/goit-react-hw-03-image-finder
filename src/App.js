@@ -22,7 +22,15 @@ class App extends Component {
   };
   async onRequestSubmit() {
     const apiAnswer = await FechApi(this.state);
-    this.setState({ images: apiAnswer });
+    this.setState((prev) => ({
+      images:
+        this.state.page === 1 ? apiAnswer : [...prev.images, ...apiAnswer],
+      loadMore: apiAnswer.length < 12 ? false : true,
+    }));
+    // if (apiAnswer.length < 12) {
+    //   return this.setState({ loadMore: false });
+    // }
+    this.setState({ isLoading: false });
   }
   async componentDidMount() {
     this.onRequestSubmit();
@@ -31,23 +39,27 @@ class App extends Component {
   }
 
   async componentDidUpdate(_, prevState) {
-    if (prevState.request !== this.state.request) {
+    if (
+      prevState.request !== this.state.request ||
+      prevState.page !== this.state.page
+    ) {
       // const apiAnswer = await FechApi(this.state);
       // this.setState({ images: apiAnswer });
       this.onRequestSubmit();
     }
-    if (prevState.page !== this.state.page && this.state.page !== 1) {
-      const apiAnswer = await FechApi(this.state);
-      this.setState((prev) => ({
-        images: [...prev.images, ...apiAnswer],
-        isLoading: false,
-      }));
 
-      if (apiAnswer.length < 12) {
-        return this.setState({ loadMore: false });
-      }
-      this.setState({ loadMore: true });
-    }
+    // if (prevState.page !== this.state.page) {
+    //    this.onRequestSubmit();
+    // const apiAnswer = await FechApi(this.state);
+    // this.setState((prev) => ({
+    //   images: [...prev.images, ...apiAnswer],
+    //   isLoading: false,
+    // }));
+
+    // if (apiAnswer.length < 12) {
+    //   return this.setState({ loadMore: false });
+    // }
+    // this.setState({ loadMore: true });
   }
 
   handleFormSubmit = (requestValue) => {
@@ -60,10 +72,10 @@ class App extends Component {
   onModalOpen = (imageURL) => {
     this.setState({ modalOpen: true, imageURL: imageURL });
   };
-  // onKeyPress = (e) =>
-  // };
+
   onModalClose = (e) => {
-    if (e === "overlay") this.setState({ modalOpen: false });
+    if (e === "overlay" || e.key === "Escape")
+      this.setState({ modalOpen: false });
   };
   render() {
     return (
@@ -79,7 +91,6 @@ class App extends Component {
           <Modal
             imageURL={this.state.imageURL}
             onModalClose={this.onModalClose}
-            onKeyPress={this.onKeyPress}
           />
         )}
         <ToastContainer autoClose={3000} />

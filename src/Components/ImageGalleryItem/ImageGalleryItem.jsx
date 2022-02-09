@@ -2,7 +2,7 @@ import s from "./ImageGalleryItem.module.css";
 import PropTypes from "prop-types";
 
 const ImageGalleryItem = ({ el, onModalOpen }) => {
-  const { webformatURL, largeImageURL, tags, id } = el;
+  const { webformatURL, largeImageURL, tags } = el;
 
   return (
     <li

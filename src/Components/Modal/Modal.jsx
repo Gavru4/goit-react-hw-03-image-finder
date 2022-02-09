@@ -1,25 +1,32 @@
 import s from "./Modal.module.css";
 import PropTypes from "prop-types";
+import { Component } from "react";
 
-const Modal = ({ imageURL, onModalClose, onKeyPress }) => {
-  return (
-    <div
-      id="overlay"
-      className={s.overlay}
-      onClick={(e) => {
-        onModalClose(e.target.id);
-      }}
-      //   onKeyPress={() => {
-      //     onKeyPress(e.target);
-      //   }}
-    >
-      <div className={s.modal}>
-        <img className={s.image} src={imageURL} alt="" />
+class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener("keydown", this.props.onModalClose);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.props.onModalClose);
+  }
+
+  render() {
+    const { imageURL, onModalClose } = this.props;
+    return (
+      <div
+        id="overlay"
+        className={s.overlay}
+        onClick={(e) => {
+          onModalClose(e.target.id);
+        }}
+      >
+        <div className={s.modal}>
+          <img className={s.image} src={imageURL} alt="" />
+        </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  }
+}
 export default Modal;
 
 Modal.propTypes = {
